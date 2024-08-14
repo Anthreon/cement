@@ -1,0 +1,156 @@
+<div class="pageWrapper">
+  <div class="innerWrapper">
+    <h1 class="title">Order History</h1>
+    <div class="filtersWrapper">
+      <section>
+        <mat-checkbox
+          *ngFor="let checkbox of statuses"
+          [checked]="checkbox.checked"
+          (change)="updateStatus($event.checked, checkbox.name)"
+        >
+          {{ checkbox.name }}</mat-checkbox
+        >
+      </section>
+
+      <mat-divider class="divider" [vertical]="true"></mat-divider>
+
+      <section>
+        <mat-form-field class="formField formPicker">
+          <mat-label>All product lines</mat-label>
+          <mat-select (selectionChange)="selectProductLine($event.value)">
+            @for (productLine of productLines; track productLine) {
+            <mat-option [value]="productLine.value">{{
+              productLine.viewValue
+            }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </section>
+
+      <mat-divider class="divider" [vertical]="true"></mat-divider>
+
+      <section>
+        <mat-form-field ngForm class="formField formPicker">
+          <mat-label>From</mat-label>
+          <input matInput [matDatepicker]="fromDate" [formControl]="from" />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="fromDate"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #fromDate>
+            <mat-datepicker-actions>
+              <button mat-button matDatepickerCancel>Cancel</button>
+              <button
+                (click)="getFromSelectedDate()"
+                mat-raised-button
+                matDatepickerApply
+              >
+                Apply
+              </button>
+            </mat-datepicker-actions>
+          </mat-datepicker>
+        </mat-form-field>
+      </section>
+
+      <mat-form-field class="formField formPicker">
+        <mat-label>To</mat-label>
+        <input [formControl]="to" matInput [matDatepicker]="toDate" />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="toDate"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #toDate>
+          <mat-datepicker-actions>
+            <button mat-button matDatepickerCancel>Cancel</button>
+            <button
+              (click)="getToSelectedDate()"
+              mat-raised-button
+              matDatepickerApply
+            >
+              Apply
+            </button>
+          </mat-datepicker-actions>
+        </mat-datepicker>
+      </mat-form-field>
+
+      <section class="formField searchFormSection">
+        <mat-form-field appearance="outline" class="searchFormField formPicker">
+          <input
+            placeholder="Search for Order Number"
+            matInput
+            type="search"
+            [(ngModel)]="searchOrder"
+          />
+          <button
+            (click)="searchForOrder()"
+            matSuffix
+            mat-icon-button
+            aria-label="Search"
+          >
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Search bar"
+              fontIcon="search"
+            ></mat-icon>
+          </button>
+        </mat-form-field>
+      </section>
+    </div>
+  </div>
+
+  <div class="ordersTableWrapper">
+    <table
+      mat-table
+      [dataSource]="orders"
+      class="ordersTable custom-elevation-table"
+    >
+      <!-- Columns Definition Here -->
+      <ng-container matColumnDef="orderNumber">
+        <th mat-header-cell *matHeaderCellDef>Order Number</th>
+        <td mat-cell *matCellDef="let order">
+          {{ order.orderNumber }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let order">{{ order.status }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="productLine">
+        <th mat-header-cell *matHeaderCellDef>Product Line</th>
+        <td mat-cell *matCellDef="let order">{{ order.productLine }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="product">
+        <th mat-header-cell *matHeaderCellDef>Product</th>
+        <td class="productName" mat-cell *matCellDef="let order">
+          {{ order.product }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>Quantity</th>
+        <td mat-cell *matCellDef="let order">{{ order.quantity }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dateRequested">
+        <th mat-header-cell *matHeaderCellDef>Date Requested</th>
+        <td mat-cell *matCellDef="let order">
+          {{ order.dateRequested | date }}
+        </td>
+      </ng-container>
+
+      <tr
+        class="ordersHeader"
+        mat-header-row
+        *matHeaderRowDef="displayedColumns"
+      ></tr>
+      <tr
+        class="tableRow"
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+      ></tr>
+    </table>
+  </div>
+</div>

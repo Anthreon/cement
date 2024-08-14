@@ -1,0 +1,92 @@
+.pageWrapper {
+  background-color: #eeeeee;
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.innerWrapper {
+  margin: 24px 24px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.filtersWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background-color: white;
+  width: 100%;
+  height: auto;
+  gap: 20px;
+}
+
+.formField {
+  background-color: white;
+  border: none;
+}
+
+.searchFormSection {
+  overflow: hidden;
+  min-width: 20vw;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.searchFormField {
+  min-width: 20vw;
+  margin-left: auto;
+}
+
+.divider {
+  height: 40px;
+  --mat-divider-width: 2px;
+}
+
+.formPicker {
+  margin-top: 12px;
+  align-self: center;
+}
+
+.productName {
+  font-weight: 500;
+}
+
+.ordersTableWrapper {
+  margin-top: 36px;
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
+.ordersHeader {
+  background-color: #eeeeee;
+}
+
+.custom-elevation-table {
+  position: relative;
+  /* Create a shadow only on the bottom */
+  box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2); /* Adjust values for desired shadow effect */
+}
+
+.tableRow {
+  margin-top: 80px;
+}
+
+.ordersTable {
+  border-collapse: separate; /* Ensures rows are separated */
+  border-spacing: 0; /* Removes default spacing if needed */
+}
+
+
+
+// table {
+//   border-collapse: separate !important;
+//   border-spacing: 0 8px !important;
+// }
