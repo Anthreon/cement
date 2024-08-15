@@ -37,7 +37,7 @@ export class OrdersService {
       { selected: true, viewValue: 'All product lines' },
       { selected: false, viewValue: 'Cement' },
       { selected: false, viewValue: 'Aggregates' },
-      { selected: false, viewValue: 'ReadyMix' },
+      { selected: false, viewValue: 'Ready-Mix' },
     ],
     from: undefined,
     to: undefined,
@@ -121,19 +121,73 @@ export class OrdersService {
 
   // Filter orders based on criteria
   filterOrders(newFilters: Filters): Order[] {
-    console.log(newFilters);
-    console.log(this.defaultFilters);
+    // console.log(newFilters);
+    // console.log(this.defaultFilters);
     if (isEqual(this.defaultFilters, newFilters)) {
       return this.defaultOrders;
     }
 
-    return this.defaultOrders.filter((order) => {
-      return newFilters.status?.some((status: Status) => {
-        if (order.status === status.name && status.checked) {
-          return true;
-        }
-        return false;
+    let filteredOrders: Order[] = structuredClone(this.defaultOrders);
+
+    const activeStatusFilters = newFilters.status
+      .filter((f) => f.checked)
+      .map((f) => f.name);
+
+    console.log(activeStatusFilters);
+
+    if (activeStatusFilters.length > 0) {
+      filteredOrders = this.defaultOrders.filter((order) => {
+        return newFilters.status?.some((status: Status) => {
+          if (order.status === status.name && status.checked) {
+            return true;
+          }
+          return false;
+        });
       });
-    });
+    }
+
+    console.log('First filter: ', filteredOrders);
+
+    const selectedProductLine = newFilters.productLines.find(
+      (pl) => pl.selected && pl.viewValue !== 'All product lines'
+    );
+
+    if (selectedProductLine) {
+      filteredOrders = filteredOrders.filter((order) => {
+        return newFilters.productLines?.some((productLine: ProductLine) => {
+          if (
+            order.productLine === productLine.viewValue &&
+            productLine.selected
+          ) {
+            return true;
+          }
+          return false;
+        });
+      });
+    }
+
+    // Filter by date range (from and to)
+    if (newFilters.from) {
+      filteredOrders = filteredOrders.filter(
+        (order) => order.dateRequested >= newFilters.from!
+      );
+    }
+
+    if (newFilters.to) {
+      filteredOrders = filteredOrders.filter(
+        (order) => order.dateRequested <= newFilters.to!
+      );
+    }
+
+    // Filter by searchOrder (order number search)
+    if (newFilters.searchOrder.length > 0) {
+      filteredOrders = filteredOrders.filter((order) =>
+        order.orderNumber.toString().includes(newFilters.searchOrder)
+      );
+    }
+
+    console.log('Second filter: ', filteredOrders);
+
+    return filteredOrders;
   }
 }

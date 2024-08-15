@@ -16,7 +16,7 @@ import { MatTableModule } from '@angular/material/table';
 import { skip, Subscription } from 'rxjs';
 
 export interface Status {
-  name: 'In Progress' | 'Pending' | 'Completed' | 'Default' | undefined;
+  name: 'In Progress' | 'Pending' | 'Completed';
   checked: boolean;
 }
 
@@ -67,13 +67,8 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     { selected: true, viewValue: 'All product lines' },
     { selected: false, viewValue: 'Cement' },
     { selected: false, viewValue: 'Aggregates' },
-    { selected: false, viewValue: 'ReadyMix' },
+    { selected: false, viewValue: 'Ready-Mix' },
   ];
-
-  public selectedProductLine: ProductLine = {
-    selected: true,
-    viewValue: 'All product lines',
-  };
 
   public statuses: Status[] = [
     { name: 'Pending', checked: false },
@@ -98,12 +93,7 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
 
   public updateStatus(
     checked: boolean,
-    checkboxName:
-      | 'In Progress'
-      | 'Pending'
-      | 'Completed'
-      | 'Default'
-      | undefined
+    checkboxName: 'In Progress' | 'Pending' | 'Completed'
   ) {
     const index: number = this.statuses.findIndex(
       (item) => item.name === checkboxName
@@ -113,21 +103,18 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     console.log(this.statuses);
     const newFilters: Filters = this.ordersService.currentFilters.getValue();
     newFilters.status = this.statuses;
-    this.ordersService.currentFilters.next(
-      this.ordersService.currentFilters.getValue()
-    );
-    // this.filteredOrders = this.ordersService.filterOrders(
-    //   this.statuses,
-    //   this.from.value,
-    //   this.to.value,
-    //   this.selectedProductLine,
-    //   this.searchOrder
-    // );
+    this.ordersService.currentFilters.next(newFilters);
   }
 
   public selectProductLine(selectedProductLine: ProductLine) {
-    this.selectedProductLine = selectedProductLine;
-    console.log(this.selectedProductLine);
+    this.productLines.forEach((productLine) => {
+      productLine.selected =
+        productLine.viewValue === selectedProductLine.viewValue;
+    });
+    const newFilters: Filters = this.ordersService.currentFilters.getValue();
+    newFilters.productLines = this.productLines;
+    console.log(newFilters);
+    this.ordersService.currentFilters.next(newFilters);
   }
 
   public getFromSelectedDate(): void {
