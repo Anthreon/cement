@@ -39,7 +39,9 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #fromDate>
             <mat-datepicker-actions>
-              <button mat-button matDatepickerCancel>Cancel</button>
+              <button mat-button matDatepickerCancel (click)="clearFromDate()">
+                Cancel
+              </button>
               <button
                 (click)="getFromSelectedDate()"
                 mat-raised-button
@@ -61,7 +63,9 @@
         ></mat-datepicker-toggle>
         <mat-datepicker #toDate>
           <mat-datepicker-actions>
-            <button mat-button matDatepickerCancel>Cancel</button>
+            <button mat-button matDatepickerCancel (click)="clearToDate()">
+              Cancel
+            </button>
             <button
               (click)="getToSelectedDate()"
               mat-raised-button
@@ -80,6 +84,7 @@
             matInput
             type="search"
             [(ngModel)]="searchOrder"
+            (input)="searchForOrder()"
           />
           <button
             (click)="searchForOrder()"
@@ -137,7 +142,7 @@
       <ng-container matColumnDef="dateRequested">
         <th mat-header-cell *matHeaderCellDef>Date Requested</th>
         <td mat-cell *matCellDef="let order">
-          {{ order.dateRequested | date }}
+          {{ order.dateRequested | date : "dd.MM.yyyy" }}
         </td>
       </ng-container>
 

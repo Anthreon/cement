@@ -51,7 +51,7 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
   public searchOrder: string = '';
   public from = new FormControl<Date | null>(null);
   public to = new FormControl<Date | null>(null);
-  displayedColumns: string[] = [
+  public displayedColumns: string[] = [
     'status',
     'orderNumber',
     'productLine',
@@ -60,8 +60,7 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     'dateRequested',
   ];
 
-  orders: Order[] = [];
-  filteredOrders: Order[] = [];
+  public filteredOrders: Order[] = [];
 
   public productLines: ProductLine[] = [
     { selected: true, viewValue: 'All product lines' },
@@ -121,6 +120,9 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     const selectedDate: Date | null = this.from.value;
     if (selectedDate) {
       console.log('Selected Date:', selectedDate);
+      const newFilters: Filters = this.ordersService.currentFilters.getValue();
+      newFilters.from = selectedDate;
+      this.ordersService.currentFilters.next(newFilters);
     } else {
       console.log('No date selected');
     }
@@ -130,12 +132,32 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     const selectedDate: Date | null = this.to.value;
     if (selectedDate) {
       console.log('Selected Date:', selectedDate);
+      const newFilters: Filters = this.ordersService.currentFilters.getValue();
+      newFilters.to = selectedDate;
+      this.ordersService.currentFilters.next(newFilters);
     } else {
       console.log('No date selected');
     }
   }
 
-  public searchForOrder() {
+  public searchForOrder(): void {
     console.log(this.searchOrder);
+    const newFilters: Filters = this.ordersService.currentFilters.getValue();
+    newFilters.searchOrder = this.searchOrder;
+    this.ordersService.currentFilters.next(newFilters);
+  }
+
+  public clearFromDate(): void {
+    const newFilters: Filters = this.ordersService.currentFilters.getValue();
+    this.from.reset();
+    newFilters.from = undefined;
+    this.ordersService.currentFilters.next(newFilters);
+  }
+
+  public clearToDate(): void {
+    const newFilters: Filters = this.ordersService.currentFilters.getValue();
+    this.to.reset();
+    newFilters.to = undefined;
+    this.ordersService.currentFilters.next(newFilters);
   }
 }

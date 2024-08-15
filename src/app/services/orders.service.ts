@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import {
   ProductLine,
   Status,
@@ -69,7 +69,7 @@ export class OrdersService {
       productLine: 'Ready-Mix',
       product: '1-200-2-C-28-12-1-3-000',
       quantity: '12 m3',
-      dateRequested: new Date(),
+      dateRequested: this.getRandomDateWithinRange(10),
     },
     {
       status: 'Pending',
@@ -77,7 +77,7 @@ export class OrdersService {
       productLine: 'Cement',
       product: 'Gris CPC 30 R Monterrey Extra 50Kg',
       quantity: '10 TN',
-      dateRequested: new Date(),
+      dateRequested: this.getRandomDateWithinRange(10),
     },
     {
       status: 'Pending',
@@ -85,7 +85,7 @@ export class OrdersService {
       productLine: 'Aggregates',
       product: 'Arena Triturada Caliza Malla 4',
       quantity: '2 TN',
-      dateRequested: new Date(),
+      dateRequested: this.getRandomDateWithinRange(10),
     },
     {
       status: 'Completed',
@@ -93,7 +93,7 @@ export class OrdersService {
       productLine: 'Aggregates',
       product: 'Arena Triturada Caliza Malla 4',
       quantity: '5 TN',
-      dateRequested: new Date(),
+      dateRequested: this.getRandomDateWithinRange(10),
     },
     {
       status: 'Completed',
@@ -101,7 +101,7 @@ export class OrdersService {
       productLine: 'Cement',
       product: 'Gris CPC30R Tolteca Extra 50Kg',
       quantity: '12 TN',
-      dateRequested: new Date(),
+      dateRequested: this.getRandomDateWithinRange(10),
     },
     {
       status: 'Completed',
@@ -109,7 +109,7 @@ export class OrdersService {
       productLine: 'Ready-Mix',
       product: '1-200-2-C-28-14-1-3-000',
       quantity: '15.5 m3',
-      dateRequested: new Date(),
+      dateRequested: this.getRandomDateWithinRange(10),
     },
   ];
 
@@ -120,7 +120,7 @@ export class OrdersService {
   }
 
   // Filter orders based on criteria
-  filterOrders(newFilters: Filters): Order[] {
+  public filterOrders(newFilters: Filters): Order[] {
     // console.log(newFilters);
     // console.log(this.defaultFilters);
     if (isEqual(this.defaultFilters, newFilters)) {
@@ -182,12 +182,22 @@ export class OrdersService {
     // Filter by searchOrder (order number search)
     if (newFilters.searchOrder.length > 0) {
       filteredOrders = filteredOrders.filter((order) =>
-        order.orderNumber.toString().includes(newFilters.searchOrder)
+        order.orderNumber.toString().startsWith(newFilters.searchOrder)
       );
     }
 
     console.log('Second filter: ', filteredOrders);
 
     return filteredOrders;
+  }
+
+  public getRandomDateWithinRange(daysRange: number): Date {
+    const currentDate = new Date();
+    const minDate: number =
+      currentDate.getTime() - daysRange * 24 * 60 * 60 * 1000; // -daysRange days
+    const maxDate: number =
+      currentDate.getTime() + daysRange * 24 * 60 * 60 * 1000; // +daysRange days
+    const randomTime: number = Math.random() * (maxDate - minDate) + minDate;
+    return new Date(randomTime);
   }
 }
