@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,16 +11,17 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Order, OrdersService } from '../../services/orders.service';
+import { Filters, Order, OrdersService } from '../../services/orders.service';
 import { MatTableModule } from '@angular/material/table';
+import { skip, Subscription } from 'rxjs';
 
 export interface Status {
-  name: string;
+  name: 'In Progress' | 'Pending' | 'Completed' | 'Default' | undefined;
   checked: boolean;
 }
 
 export interface ProductLine {
-  value: string;
+  selected: boolean;
   viewValue: string;
 }
 
@@ -45,7 +46,8 @@ export interface ProductLine {
   templateUrl: './order-history.component.html',
   styleUrl: './order-history.component.scss',
 })
-export class OrderHistoryComponent {
+export class OrderHistoryComponent implements OnInit, OnDestroy {
+  private filtersSubscription: Subscription = new Subscription();
   public searchOrder: string = '';
   public from = new FormControl<Date | null>(null);
   public to = new FormControl<Date | null>(null);
@@ -62,23 +64,16 @@ export class OrderHistoryComponent {
   filteredOrders: Order[] = [];
 
   public productLines: ProductLine[] = [
-    { value: 'all', viewValue: 'All product lines' },
-    { value: 'cement', viewValue: 'Cement' },
-    { value: 'aggregates', viewValue: 'Aggregates' },
-    { value: 'readymix', viewValue: 'ReadyMix' },
+    { selected: true, viewValue: 'All product lines' },
+    { selected: false, viewValue: 'Cement' },
+    { selected: false, viewValue: 'Aggregates' },
+    { selected: false, viewValue: 'ReadyMix' },
   ];
 
   public selectedProductLine: ProductLine = {
-    value: 'all',
+    selected: true,
     viewValue: 'All product lines',
   };
-
-  public selectedStatus:
-    | 'In Progress'
-    | 'Pending'
-    | 'Completed'
-    | 'Default'
-    | undefined = 'Default';
 
   public statuses: Status[] = [
     { name: 'Pending', checked: false },
@@ -89,33 +84,44 @@ export class OrderHistoryComponent {
   constructor(private ordersService: OrdersService) {}
 
   ngOnInit(): void {
-    this.orders = this.ordersService.getDefaultOrders();
-  }
-
-  loadOrders(): void {
-    this.ordersService
-      .filterOrders(
-        this.from.value,
-        this.to.value,
-        this.selectedStatus,
-        this.selectedProductLine,
-        this.searchOrder
-      )
-      .subscribe((filteredOrders) => {
-        this.filteredOrders = filteredOrders;
+    this.filteredOrders = this.ordersService.getDefaultOrders();
+    this.filtersSubscription = this.ordersService.currentFilters
+      .pipe(skip(1))
+      .subscribe((newFilters: Filters) => {
+        this.filteredOrders = this.ordersService.filterOrders(newFilters);
       });
   }
 
-  public updateStatus(checked: boolean, checkboxName: string) {
+  ngOnDestroy(): void {
+    this.filtersSubscription.unsubscribe();
+  }
+
+  public updateStatus(
+    checked: boolean,
+    checkboxName:
+      | 'In Progress'
+      | 'Pending'
+      | 'Completed'
+      | 'Default'
+      | undefined
+  ) {
     const index: number = this.statuses.findIndex(
       (item) => item.name === checkboxName
     );
-    for (let i = 0; i < this.statuses.length; i++) {
-      if (i !== index) {
-        this.statuses[i].checked = false;
-      }
-    }
+
     this.statuses[index].checked = checked;
+    const newFilters: Filters = this.ordersService.currentFilters.getValue();
+    newFilters.status = this.statuses;
+    this.ordersService.currentFilters.next(
+      this.ordersService.currentFilters.getValue()
+    );
+    // this.filteredOrders = this.ordersService.filterOrders(
+    //   this.statuses,
+    //   this.from.value,
+    //   this.to.value,
+    //   this.selectedProductLine,
+    //   this.searchOrder
+    // );
   }
 
   public selectProductLine(selectedProductLine: ProductLine) {

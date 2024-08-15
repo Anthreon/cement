@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { ProductLine } from '../pages/order-history/order-history.component';
+import {
+  ProductLine,
+  Status,
+} from '../pages/order-history/order-history.component';
 
 export interface Order {
   status: 'In Progress' | 'Pending' | 'Completed' | 'Default';
@@ -11,10 +14,37 @@ export interface Order {
   dateRequested: Date;
 }
 
+export interface Filters {
+  status: Status[];
+  productLines: ProductLine[];
+  from: Date | undefined;
+  to: Date | undefined;
+  searchOrder: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class OrdersService {
+  public currentFilters: BehaviorSubject<Filters> =
+    new BehaviorSubject<Filters>({
+      status: [
+        { name: 'Pending', checked: false },
+        { name: 'In Progress', checked: false },
+        { name: 'Completed', checked: false },
+        { name: 'Default', checked: false },
+      ],
+      productLines: [
+        { selected: true, viewValue: 'All product lines' },
+        { selected: false, viewValue: 'Cement' },
+        { selected: false, viewValue: 'Aggregates' },
+        { selected: false, viewValue: 'ReadyMix' },
+      ],
+      from: undefined,
+      to: undefined,
+      searchOrder: '',
+    });
+
   private defaultOrders: Order[] = [
     {
       status: 'In Progress',
@@ -73,47 +103,15 @@ export class OrdersService {
   }
 
   // Filter orders based on criteria
-  filterOrders(
-    startDate?: Date | null,
-    endDate?: Date | null,
-    status?: 'In Progress' | 'Pending' | 'Completed' | 'Default',
-    productLines?: ProductLine,
-    searchString?: string
-  ): Observable<Order[]> {
-    return of(
-      this.defaultOrders.filter((order) => {
-        // Date Filtering
-        if (
-          startDate &&
-          endDate &&
-          (order.dateRequested < startDate || order.dateRequested > endDate)
-        ) {
-          return false;
+  filterOrders(newFilters: Filters): Order[] {
+    console.log(newFilters);
+    return this.defaultOrders.filter((order) => {
+      return newFilters.status?.some((status: Status) => {
+        if (order.status === status.name && status.checked) {
+          return true;
         }
-
-        // Status Filtering
-        if (status && status.length > 0 && !status.includes(order.status)) {
-          return false;
-        }
-
-        // Product Line Filtering
-        if (productLines && !order.productLine.includes(productLines.value)) {
-          return false;
-        }
-
-        // Search String Filtering
-        if (
-          searchString &&
-          !(
-            order.product.toLowerCase().includes(searchString.toLowerCase()) ||
-            order.orderNumber.toString().includes(searchString)
-          )
-        ) {
-          return false;
-        }
-
-        return true;
-      })
-    );
+        return false;
+      });
+    });
   }
 }
