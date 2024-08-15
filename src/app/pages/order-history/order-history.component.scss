@@ -83,3 +83,14 @@
   border-collapse: separate; 
   border-spacing: 0;
 }
+
+.statusSection {
+  position: relative;
+}
+
+.filterCategory {
+  position: absolute;
+  font-weight: 500;
+  margin-left: 10px;
+  margin-top: -14px;
+}

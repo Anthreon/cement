@@ -2,7 +2,8 @@
   <div class="innerWrapper">
     <h1 class="title">Order History</h1>
     <div class="filtersWrapper">
-      <section>
+      <section class="statusSection">
+        <p class="filterCategory">Status</p>
         <mat-checkbox
           *ngFor="let checkbox of statuses"
           [checked]="checkbox.checked"
@@ -16,7 +17,7 @@
 
       <section>
         <mat-form-field class="formField formPicker">
-          <mat-label>All product lines</mat-label>
+          <mat-label>Product Line</mat-label>
           <mat-select (selectionChange)="selectProductLine($event.value)">
             @for (productLine of productLines; track productLine) {
             <mat-option [value]="productLine">{{
