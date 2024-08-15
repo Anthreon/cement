@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -14,20 +14,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Filters, Order, OrdersService } from '../../services/orders.service';
 import { MatTableModule } from '@angular/material/table';
 import { skip, Subscription } from 'rxjs';
 import { EmptyResultsComponent } from '../../components/empty-results/empty-results.component';
-
-export interface Status {
-  name: 'In Progress' | 'Pending' | 'Completed';
-  checked: boolean;
-}
-
-export interface ProductLine {
-  selected: boolean;
-  viewValue: string;
-}
+import {
+  Filters,
+  Order,
+  ProductLine,
+  Status,
+} from '../../interfaces/orderHistoryInterfaces';
+import { OrdersService } from '../../services/orders.service';
 
 @Component({
   selector: 'app-order-history',
@@ -108,7 +104,6 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     );
 
     this.statuses[index].checked = checked;
-    console.log(this.statuses);
     const newFilters: Filters = this.ordersService.currentFilters.getValue();
     newFilters.status = this.statuses;
     this.ordersService.currentFilters.next(newFilters);
@@ -121,36 +116,28 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     });
     const newFilters: Filters = this.ordersService.currentFilters.getValue();
     newFilters.productLines = this.productLines;
-    console.log(newFilters);
     this.ordersService.currentFilters.next(newFilters);
   }
 
   public getFromSelectedDate(): void {
     const selectedDate: Date | null = this.from.value;
     if (selectedDate) {
-      console.log('Selected Date:', selectedDate);
       const newFilters: Filters = this.ordersService.currentFilters.getValue();
       newFilters.from = selectedDate;
       this.ordersService.currentFilters.next(newFilters);
-    } else {
-      console.log('No date selected');
     }
   }
 
   public getToSelectedDate(): void {
     const selectedDate: Date | null = this.to.value;
     if (selectedDate) {
-      console.log('Selected Date:', selectedDate);
       const newFilters: Filters = this.ordersService.currentFilters.getValue();
       newFilters.to = selectedDate;
       this.ordersService.currentFilters.next(newFilters);
-    } else {
-      console.log('No date selected');
     }
   }
 
   public searchForOrder(): void {
-    console.log(this.searchOrder);
     const newFilters: Filters = this.ordersService.currentFilters.getValue();
     newFilters.searchOrder = this.searchOrder;
     this.ordersService.currentFilters.next(newFilters);

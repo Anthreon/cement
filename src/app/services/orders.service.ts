@@ -1,27 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { isEqual } from 'lodash';
 import {
+  Filters,
+  Order,
   ProductLine,
   Status,
-} from '../pages/order-history/order-history.component';
-import { isEqual } from 'lodash';
-
-export interface Order {
-  status: 'In Progress' | 'Pending' | 'Completed';
-  orderNumber: number;
-  productLine: 'Ready-Mix' | 'Cement' | 'Aggregates' | 'All product lines';
-  product: string;
-  quantity: string;
-  dateRequested: Date;
-}
-
-export interface Filters {
-  status: Status[];
-  productLines: ProductLine[];
-  from: Date | undefined;
-  to: Date | undefined;
-  searchOrder: string;
-}
+} from '../interfaces/orderHistoryInterfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -121,19 +106,16 @@ export class OrdersService {
 
   // Filter orders based on criteria
   public filterOrders(newFilters: Filters): Order[] {
-    // console.log(newFilters);
-    // console.log(this.defaultFilters);
     if (isEqual(this.defaultFilters, newFilters)) {
       return this.defaultOrders;
     }
 
     let filteredOrders: Order[] = structuredClone(this.defaultOrders);
 
+    // Filter by status
     const activeStatusFilters = newFilters.status
       .filter((f) => f.checked)
       .map((f) => f.name);
-
-    console.log(activeStatusFilters);
 
     if (activeStatusFilters.length > 0) {
       filteredOrders = this.defaultOrders.filter((order) => {
@@ -146,8 +128,7 @@ export class OrdersService {
       });
     }
 
-    console.log('First filter: ', filteredOrders);
-
+    // Filter by product line
     const selectedProductLine = newFilters.productLines.find(
       (pl) => pl.selected && pl.viewValue !== 'All product lines'
     );
@@ -185,8 +166,6 @@ export class OrdersService {
         order.orderNumber.toString().startsWith(newFilters.searchOrder)
       );
     }
-
-    console.log('Second filter: ', filteredOrders);
 
     return filteredOrders;
   }
