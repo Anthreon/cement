@@ -133,7 +133,6 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     this.ordersService.currentFilters.next(newFilters);
   }
 
-  // Simplified methods
   public getFromSelectedDate(): void {
     const selectedDate: Date | null = this.from.value;
     this.updateFilters('from', selectedDate ?? undefined);

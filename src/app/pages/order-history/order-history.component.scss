@@ -79,11 +79,6 @@
   margin-top: 80px;
 }
 
-.ordersTable {
-  border-collapse: separate; 
-  border-spacing: 0;
-}
-
 .statusSection {
   position: relative;
 }
@@ -119,3 +114,17 @@
   position: relative;
   top: -6px;
 }
+
+table {
+  border-collapse: separate !important; /* Ensure spacing works */
+  border-spacing: 0 10px !important; /* Vertical spacing of 10px */
+  background-color: #eeeeee;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+tr{ 
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+  background-color: white;}
+
