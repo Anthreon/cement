@@ -69,7 +69,7 @@ export class OrdersService {
       productLine: 'Ready-Mix',
       product: '1-200-2-C-28-12-1-3-000',
       quantity: '12 m3',
-      dateRequested: this.getRandomDateWithinRange(10),
+      dateRequested: this.getRandomDateWithinRange(2000),
     },
     {
       status: 'Pending',
@@ -77,7 +77,7 @@ export class OrdersService {
       productLine: 'Cement',
       product: 'Gris CPC 30 R Monterrey Extra 50Kg',
       quantity: '10 TN',
-      dateRequested: this.getRandomDateWithinRange(10),
+      dateRequested: this.getRandomDateWithinRange(2000),
     },
     {
       status: 'Pending',
@@ -85,7 +85,7 @@ export class OrdersService {
       productLine: 'Aggregates',
       product: 'Arena Triturada Caliza Malla 4',
       quantity: '2 TN',
-      dateRequested: this.getRandomDateWithinRange(10),
+      dateRequested: this.getRandomDateWithinRange(2000),
     },
     {
       status: 'Completed',
@@ -93,7 +93,7 @@ export class OrdersService {
       productLine: 'Aggregates',
       product: 'Arena Triturada Caliza Malla 4',
       quantity: '5 TN',
-      dateRequested: this.getRandomDateWithinRange(10),
+      dateRequested: this.getRandomDateWithinRange(2000),
     },
     {
       status: 'Completed',
@@ -101,7 +101,7 @@ export class OrdersService {
       productLine: 'Cement',
       product: 'Gris CPC30R Tolteca Extra 50Kg',
       quantity: '12 TN',
-      dateRequested: this.getRandomDateWithinRange(10),
+      dateRequested: this.getRandomDateWithinRange(2000),
     },
     {
       status: 'Completed',
@@ -109,7 +109,7 @@ export class OrdersService {
       productLine: 'Ready-Mix',
       product: '1-200-2-C-28-14-1-3-000',
       quantity: '15.5 m3',
-      dateRequested: this.getRandomDateWithinRange(10),
+      dateRequested: this.getRandomDateWithinRange(2000),
     },
   ];
 

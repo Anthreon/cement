@@ -2,7 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MatDatepickerInputEvent,
+  MatDatepickerModule,
+} from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -158,6 +161,30 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     const newFilters: Filters = this.ordersService.currentFilters.getValue();
     this.to.reset();
     newFilters.to = undefined;
+    this.ordersService.currentFilters.next(newFilters);
+  }
+
+  public fromDateChange(
+    type: string,
+    event: MatDatepickerInputEvent<Date>
+  ): void {
+    const newFilters: Filters = this.ordersService.currentFilters.getValue();
+    newFilters.from = undefined;
+    if (event.value) {
+      newFilters.from = event.value;
+    }
+    this.ordersService.currentFilters.next(newFilters);
+  }
+
+  public toDateChange(
+    type: string,
+    event: MatDatepickerInputEvent<Date>
+  ): void {
+    const newFilters: Filters = this.ordersService.currentFilters.getValue();
+    newFilters.to = undefined;
+    if (event.value) {
+      newFilters.to = event.value;
+    }
     this.ordersService.currentFilters.next(newFilters);
   }
 }

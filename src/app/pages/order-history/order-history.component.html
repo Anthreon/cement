@@ -32,7 +32,13 @@
       <section>
         <mat-form-field ngForm class="formField formPicker">
           <mat-label>From</mat-label>
-          <input matInput [matDatepicker]="fromDate" [formControl]="from" />
+          <input
+            (dateInput)="fromDateChange('input', $event)"
+            matInput
+            [matDatepicker]="fromDate"
+            [formControl]="from"
+          />
+          <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle
             matIconSuffix
             [for]="fromDate"
@@ -56,7 +62,13 @@
 
       <mat-form-field class="formField formPicker">
         <mat-label>To</mat-label>
-        <input [formControl]="to" matInput [matDatepicker]="toDate" />
+        <input
+          (dateInput)="toDateChange('input', $event)"
+          [formControl]="to"
+          matInput
+          [matDatepicker]="toDate"
+        />
+        <mat-hint>MM/DD/YYYY</mat-hint>
         <mat-datepicker-toggle
           matIconSuffix
           [for]="toDate"
