@@ -94,3 +94,28 @@
   margin-left: 10px;
   margin-top: -14px;
 }
+
+.statusIcon {
+  display: inline-block;
+  border-radius: 4px;
+  width: 35px;
+  height: 25px;
+  margin-right: 12px;
+}
+
+.statusProgress {
+  background-color: #34baeb;
+}
+
+.statusPending {
+  background-color: #eb9934;
+}
+
+.statusCompleted {
+  background-color: #7fcf42;
+}
+
+.statusText {
+  position: relative;
+  top: -6px;
+}
