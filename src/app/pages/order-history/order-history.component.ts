@@ -17,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Filters, Order, OrdersService } from '../../services/orders.service';
 import { MatTableModule } from '@angular/material/table';
 import { skip, Subscription } from 'rxjs';
+import { EmptyResultsComponent } from '../../components/empty-results/empty-results.component';
 
 export interface Status {
   name: 'In Progress' | 'Pending' | 'Completed';
@@ -44,6 +45,7 @@ export interface ProductLine {
     CommonModule,
     ReactiveFormsModule,
     MatTableModule,
+    EmptyResultsComponent,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './order-history.component.html',
@@ -79,6 +81,10 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private ordersService: OrdersService) {}
+
+  get weHaveOrders(): boolean {
+    return this.filteredOrders.length > 0;
+  }
 
   ngOnInit(): void {
     this.filteredOrders = this.ordersService.getDefaultOrders();

@@ -1,12 +1,12 @@
 .pageWrapper {
   background-color: #eeeeee;
-
-  padding: 0;
-  margin: 0;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh; 
+  background-color: #f0f0f0; 
+
 }
 
 .innerWrapper {
@@ -26,6 +26,7 @@
   width: 100%;
   height: auto;
   gap: 20px;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
 }
 
 .formField {
@@ -71,8 +72,7 @@
 
 .custom-elevation-table {
   position: relative;
-  /* Create a shadow only on the bottom */
-  box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2); /* Adjust values for desired shadow effect */
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
 }
 
 .tableRow {
@@ -80,13 +80,6 @@
 }
 
 .ordersTable {
-  border-collapse: separate; /* Ensures rows are separated */
-  border-spacing: 0; /* Removes default spacing if needed */
+  border-collapse: separate; 
+  border-spacing: 0;
 }
-
-
-
-// table {
-//   border-collapse: separate !important;
-//   border-spacing: 0 8px !important;
-// }

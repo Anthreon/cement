@@ -115,7 +115,9 @@
     </div>
   </div>
 
-  <div class="ordersTableWrapper">
+  <app-empty-results *ngIf="!weHaveOrders"></app-empty-results>
+
+  <div *ngIf="weHaveOrders" class="ordersTableWrapper">
     <table
       mat-table
       [dataSource]="filteredOrders"
