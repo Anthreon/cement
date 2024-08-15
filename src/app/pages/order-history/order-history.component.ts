@@ -98,7 +98,7 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
   public updateStatus(
     checked: boolean,
     checkboxName: 'In Progress' | 'Pending' | 'Completed'
-  ) {
+  ): void {
     const index: number = this.statuses.findIndex(
       (item) => item.name === checkboxName
     );
@@ -109,7 +109,7 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     this.ordersService.currentFilters.next(newFilters);
   }
 
-  public selectProductLine(selectedProductLine: ProductLine) {
+  public selectProductLine(selectedProductLine: ProductLine): void {
     this.productLines.forEach((productLine) => {
       productLine.selected =
         productLine.viewValue === selectedProductLine.viewValue;
@@ -119,22 +119,29 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     this.ordersService.currentFilters.next(newFilters);
   }
 
+  // Utility function to update filters
+  private updateFilters<K extends keyof Filters>(
+    filterKey: K,
+    value?: Filters[K]
+  ): void {
+    const newFilters: Filters = this.ordersService.currentFilters.getValue();
+    if (value === undefined) {
+      delete newFilters[filterKey];
+    } else {
+      newFilters[filterKey] = value;
+    }
+    this.ordersService.currentFilters.next(newFilters);
+  }
+
+  // Simplified methods
   public getFromSelectedDate(): void {
     const selectedDate: Date | null = this.from.value;
-    if (selectedDate) {
-      const newFilters: Filters = this.ordersService.currentFilters.getValue();
-      newFilters.from = selectedDate;
-      this.ordersService.currentFilters.next(newFilters);
-    }
+    this.updateFilters('from', selectedDate ?? undefined);
   }
 
   public getToSelectedDate(): void {
     const selectedDate: Date | null = this.to.value;
-    if (selectedDate) {
-      const newFilters: Filters = this.ordersService.currentFilters.getValue();
-      newFilters.to = selectedDate;
-      this.ordersService.currentFilters.next(newFilters);
-    }
+    this.updateFilters('to', selectedDate ?? undefined);
   }
 
   public searchForOrder(): void {
@@ -144,40 +151,26 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
   }
 
   public clearFromDate(): void {
-    const newFilters: Filters = this.ordersService.currentFilters.getValue();
     this.from.reset();
-    newFilters.from = undefined;
-    this.ordersService.currentFilters.next(newFilters);
+    this.updateFilters('from');
   }
 
   public clearToDate(): void {
-    const newFilters: Filters = this.ordersService.currentFilters.getValue();
     this.to.reset();
-    newFilters.to = undefined;
-    this.ordersService.currentFilters.next(newFilters);
+    this.updateFilters('to');
   }
 
   public fromDateChange(
     type: string,
     event: MatDatepickerInputEvent<Date>
   ): void {
-    const newFilters: Filters = this.ordersService.currentFilters.getValue();
-    newFilters.from = undefined;
-    if (event.value) {
-      newFilters.from = event.value;
-    }
-    this.ordersService.currentFilters.next(newFilters);
+    this.updateFilters('from', event.value!);
   }
 
   public toDateChange(
     type: string,
     event: MatDatepickerInputEvent<Date>
   ): void {
-    const newFilters: Filters = this.ordersService.currentFilters.getValue();
-    newFilters.to = undefined;
-    if (event.value) {
-      newFilters.to = event.value;
-    }
-    this.ordersService.currentFilters.next(newFilters);
+    this.updateFilters('to', event.value!);
   }
 }
