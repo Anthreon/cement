@@ -8,6 +8,7 @@
           *ngFor="let checkbox of statuses"
           [checked]="checkbox.checked"
           (change)="updateStatus($event.checked, checkbox.name)"
+          color="primary"
         >
           {{ checkbox.name }}</mat-checkbox
         >
@@ -109,6 +110,7 @@
               aria-hidden="false"
               aria-label="Search bar"
               fontIcon="search"
+              color="primary"
             ></mat-icon>
           </button>
         </mat-form-field>
