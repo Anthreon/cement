@@ -19,7 +19,7 @@
           <mat-label>All product lines</mat-label>
           <mat-select (selectionChange)="selectProductLine($event.value)">
             @for (productLine of productLines; track productLine) {
-            <mat-option [value]="productLine.value">{{
+            <mat-option [value]="productLine.selected">{{
               productLine.viewValue
             }}</mat-option>
             }

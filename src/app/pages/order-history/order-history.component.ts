@@ -110,6 +110,7 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     );
 
     this.statuses[index].checked = checked;
+    console.log(this.statuses);
     const newFilters: Filters = this.ordersService.currentFilters.getValue();
     newFilters.status = this.statuses;
     this.ordersService.currentFilters.next(

@@ -4,9 +4,10 @@ import {
   ProductLine,
   Status,
 } from '../pages/order-history/order-history.component';
+import { isEqual } from 'lodash';
 
 export interface Order {
-  status: 'In Progress' | 'Pending' | 'Completed' | 'Default';
+  status: 'In Progress' | 'Pending' | 'Completed';
   orderNumber: number;
   productLine: 'Ready-Mix' | 'Cement' | 'Aggregates' | 'All product lines';
   product: string;
@@ -26,13 +27,29 @@ export interface Filters {
   providedIn: 'root',
 })
 export class OrdersService {
+  private defaultFilters: Filters = {
+    status: [
+      { name: 'Pending', checked: false },
+      { name: 'In Progress', checked: false },
+      { name: 'Completed', checked: false },
+    ],
+    productLines: [
+      { selected: true, viewValue: 'All product lines' },
+      { selected: false, viewValue: 'Cement' },
+      { selected: false, viewValue: 'Aggregates' },
+      { selected: false, viewValue: 'ReadyMix' },
+    ],
+    from: undefined,
+    to: undefined,
+    searchOrder: '',
+  };
+
   public currentFilters: BehaviorSubject<Filters> =
     new BehaviorSubject<Filters>({
       status: [
         { name: 'Pending', checked: false },
         { name: 'In Progress', checked: false },
         { name: 'Completed', checked: false },
-        { name: 'Default', checked: false },
       ],
       productLines: [
         { selected: true, viewValue: 'All product lines' },
@@ -105,6 +122,11 @@ export class OrdersService {
   // Filter orders based on criteria
   filterOrders(newFilters: Filters): Order[] {
     console.log(newFilters);
+    console.log(this.defaultFilters);
+    if (isEqual(this.defaultFilters, newFilters)) {
+      return this.defaultOrders;
+    }
+
     return this.defaultOrders.filter((order) => {
       return newFilters.status?.some((status: Status) => {
         if (order.status === status.name && status.checked) {
